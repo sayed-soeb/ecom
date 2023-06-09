@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store Info</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #f2f2f2, #ddd);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header Styles */
+    .header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+    }
+
+    /* Form Styles */
+    .form {
+      margin-bottom: 20px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-button {
+      padding: 10px 20px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Product List Styles */
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 20px;
+    }
+
+    .product-list img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .product-list h3 {
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+
+    .product-list p {
+      margin: 0;
+    }
+
+    /* Store Info Styles */
+    .store-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .store-info img {
+      max-width: 200px;
+      height: auto;
+      margin-right: 20px;
+    }
+
+    .store-info .info {
+      flex-grow: 1;
+    }
+  </style>
+</head>
+<body>
+  <h2 class="header">Store Info</h2>
+  <% if (storeInfo) { %>
+    <div class="container">
+      <div class="store-info">
+        <img src="/uploads/<%= storeInfo.logo %>" alt="Store Logo">
+        <div class="info">
+          <p>Address: <%= storeInfo.address %></p>
+          <p>GST: <%= storeInfo.gst %></p>
+          <p>Store Timings: <%= storeInfo.storeTimings %></p>
+        </div>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="container">
+      <div class="store-info">
+        <div class="info">
+          <p>No store information found.</p>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <h2 class="header">Product Search</h2>
+  <div class="container">
+    <form id="productSearchForm" class="form">
+      <input type="text" id="searchInput" placeholder="Search products" class="form-input">
+      <button type="submit" class="form-button">Search</button>
+    </form>
+  </div>
+
+  <h2 class="header">Product List</h2>
+  <div id="productList" class="container product-list"></div>
+
+  <script>
+    function searchProducts() {
+    const searchInput = document.getElementById('searchInput').value;
+
+    // Perform product search and update the product list
+    fetch(`/dashboard/<%= user.businessName %>/products?search=${searchInput}`)
+      .then(response => response.json())
+      .then(data => {
+        const productList = document.getElementById('productList');
+        productList.innerHTML = '';
+
+        if (data.length === 0) {
+          productList.innerHTML = '<p>No products found</p>';
+        } else {
+          data.forEach(product => {
+            const productItem = document.createElement('div');
+            productItem.innerHTML = `
+              <img src="/uploads/${product.productImage}" alt="${product.name}">
+              <h3>${product.name}</h3>
+              <p>Price: ${product.price}</p>
+            `;
+            productList.appendChild(productItem);
+          });
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  // Add event listener to the form submission
+  document.getElementById('productSearchForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+    searchProducts(); // Call the searchProducts function
+  });
+
+  // Call the searchProducts function initially to load all products
+  searchProducts();
+  </script>
+</body>
+</html>
+
+
+
+

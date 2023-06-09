@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to the Dashboard</h1>
+    <a href="/dashboard/logout" class="logout-button">Logout</a>
+    <h2>Store Info</h2>
+    <p><a href="/dashboard/<%= user.businessName %>">View Store</a></p>
+
+
+    <h2>Add Store Info</h2>
+    <form action="/dashboard/store-info" method="POST" enctype="multipart/form-data" class="form">
+      <div class="form-group">
+        <label class="form-label" for="address">Address</label>
+        <input type="text" name="address" id="address" class="form-input" placeholder="Address" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="gst">GST</label>
+        <input type="text" name="gst" id="gst" class="form-input" placeholder="GST" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="storeTimings">Store Timings</label>
+        <input type="text" name="storeTimings" id="storeTimings" class="form-input" placeholder="Store Timings" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="logo">Logo</label>
+        <input type="file" name="logo" id="logo" class="form-input" required>
+      </div>
+      <button type="submit" class="form-button">Add Store Info</button>
+    </form>
+
+    
+    <h2>Add Category</h2>
+    <form action="/dashboard/category" method="POST" class="form">
+      <div class="form-group">
+        <label class="form-label" for="categoryName">Category Name</label>
+        <input type="text" name="categoryName" id="categoryName" class="form-input" placeholder="Category Name" required>
+      </div>
+      <button type="submit" class="form-button">Add Category</button>
+    </form>
+    <hr>
+
+    <h2>Add Subcategory</h2>
+    <form action="/dashboard/subcategory" method="POST" class="form">
+      <div class="form-group">
+        <label class="form-label" for="subcategoryName">Subcategory Name</label>
+        <input type="text" name="subcategoryName" id="subcategoryName" class="form-input" placeholder="Subcategory Name" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="categoryId">Category</label>
+        <select name="categoryId" id="categoryId" class="form-select" required>
+          <option value="" disabled selected>Select Category</option>
+          <% categories.forEach(function(category) { %>
+            <option value="<%= category._id %>"><%= category.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit" class="form-button">Add Subcategory</button>
+    </form>
+
+    <h2>Add Inventory</h2>
+    <form action="/dashboard/inventory" method="POST" enctype="multipart/form-data" class="form">
+      <div class="form-group">
+        <label class="form-label" for="productName">Product Name</label>
+        <input type="text" name="productName" id="productName" class="form-input" placeholder="Product Name" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="categoryId">Category</label>
+        <select name="categoryId" id="categoryId" class="form-select" required>
+          <% categories.forEach(function(category) { %>
+            <option value="<%= category._id %>"><%= category.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="subCategoryId">Subcategory</label>
+        <select name="subCategoryId" id="subCategoryId" class="form-select" required>
+          <% subCategories.forEach(function(subCategory) { %>
+            <option value="<%= subCategory._id %>"><%= subCategory.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="price">MRP</label>
+        <input type="number" name="price" id="price" class="form-input" placeholder="Price" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="price">SP</label>
+      <input type="number" name="sp" placeholder="Selling Price" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="price">QTY</label>
+       <input type="number" name="qty" placeholder="Quantity" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="productImage">Product Image</label>
+        <input type="file" name="productImage" id="productImage" class="form-input" accept="image/*" required>
+      </div>
+      <button type="submit" class="form-button">Add Inventory</button>
+    </form>
+
+    <h2>Categories</h2>
+    <ul>
+      <% categories.forEach(function(category) { %>
+        <li><%= category.name %></li>
+      <% }) %>
+    </ul>
+
+    <h2>Sub Categories</h2>
+    <ul>
+      <% subCategories.forEach(function(subCategory) { %>
+        <li><%= subCategory.name %></li>
+      <% }) %>
+    </ul>
+
+    <!-- Product List -->
+<h2>Product List</h2>
+<div id="productList" class="product-list">
+  <% products.forEach(function(product) { %>
+    <div class="product-item">
+      <img src="/uploads/<%= product.productImage %>" alt="<%= product.name %>">
+      <h3><%= product.name %></h3>
+      <p>Price: <%= product.price %></p>
+    </div>
+  <% }) %>
+</div>
+
+  </div>
+</body>
+</html>
